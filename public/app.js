@@ -35,7 +35,7 @@ const translations = {
     yourNameLabel: "Tên bạn",
     crushNameLabel: "Tên người ấy",
     dobTitle: "Thêm ngày sinh",
-    dobHint: "Không bắt buộc. Nhỏ thôi, nhưng tăng độ drama.",
+    dobHint: "Không bắt buộc. Nhỏ thôi nhưng tăng độ kiểm chứng!",
     yourDobLabel: "Ngày sinh bạn",
     crushDobLabel: "Ngày sinh người ấy",
     submit: "Xem chart hợp nhau",
