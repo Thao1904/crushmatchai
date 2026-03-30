@@ -16,12 +16,8 @@ const PORT = Number(process.env.PORT || 3000);
 const HOST = process.env.HOST || "127.0.0.1";
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || "change-me-now";
 const SESSION_SECRET = process.env.SESSION_SECRET || crypto.randomBytes(32).toString("hex");
-const SUPABASE_URL = (process.env.SUPABASE_URL || "").replace(/\/$/, "");
-const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || "";
-const SUPABASE_TABLE = process.env.SUPABASE_TABLE || "submissions";
 const SESSION_TTL_MS = 1000 * 60 * 60 * 8;
 const sessions = new Map();
-const useSupabase = Boolean(SUPABASE_URL && SUPABASE_SERVICE_ROLE_KEY);
 
 ensureStorage();
 
@@ -62,11 +58,9 @@ const server = http.createServer(async (req, res) => {
     }
 
     if (req.method === "GET" && url.pathname === "/api/health") {
-      const totalSubmissions = (await getSubmissions()).length;
       return sendJson(res, 200, {
         ok: true,
-        storage: useSupabase ? "supabase" : "local-json",
-        totalSubmissions
+        totalSubmissions: readSubmissions().length
       });
     }
 
@@ -135,25 +129,6 @@ function saveSubmissions(submissions) {
   fs.writeFileSync(dataFile, JSON.stringify(submissions, null, 2) + "\n", "utf8");
 }
 
-async function getSubmissions() {
-  if (useSupabase) {
-    return readSupabaseSubmissions();
-  }
-
-  return readSubmissions();
-}
-
-async function saveSubmission(record) {
-  if (useSupabase) {
-    await insertSupabaseSubmission(record);
-    return;
-  }
-
-  const submissions = readSubmissions();
-  submissions.unshift(record);
-  saveSubmissions(submissions);
-}
-
 function parseBody(req) {
   return new Promise((resolve, reject) => {
     let body = "";
@@ -195,6 +170,7 @@ async function handleSubmit(req, res) {
     chaos: seededNumber(`c:${scoreSeed}`, 33, 100)
   };
 
+  const submissions = readSubmissions();
   const record = {
     id: crypto.randomUUID(),
     yourName,
@@ -207,7 +183,8 @@ async function handleSubmit(req, res) {
     createdAt: new Date().toISOString()
   };
 
-  await saveSubmission(record);
+  submissions.unshift(record);
+  saveSubmissions(submissions);
 
   sendJson(res, 201, {
     ok: true,
@@ -266,21 +243,20 @@ function handleAdminLogout(req, res) {
   );
 }
 
-async function handleAdminSubmissions(req, res) {
+function handleAdminSubmissions(req, res) {
   if (!isAuthed(req)) {
     return sendJson(res, 401, { error: "Unauthorized" });
   }
 
-  const submissions = await getSubmissions();
-  sendJson(res, 200, { submissions });
+  sendJson(res, 200, { submissions: readSubmissions() });
 }
 
-async function handleAdminExport(req, res) {
+function handleAdminExport(req, res) {
   if (!isAuthed(req)) {
     return sendJson(res, 401, { error: "Unauthorized" });
   }
 
-  const rows = await getSubmissions();
+  const rows = readSubmissions();
   const csv = toCsv(rows);
   res.writeHead(200, {
     "Content-Type": "text/csv; charset=utf-8",
@@ -349,45 +325,6 @@ function seededNumber(seed, min, max) {
   const decimal = Number.parseInt(hex, 16);
   const range = max - min + 1;
   return min + (decimal % range);
-}
-
-async function readSupabaseSubmissions() {
-  const response = await fetch(
-    `${SUPABASE_URL}/rest/v1/${encodeURIComponent(SUPABASE_TABLE)}?select=*&order=createdAt.desc`,
-    {
-      headers: supabaseHeaders()
-    }
-  );
-
-  if (!response.ok) {
-    throw new Error(`Supabase read failed: ${response.status} ${await response.text()}`);
-  }
-
-  const rows = await response.json();
-  return Array.isArray(rows) ? rows : [];
-}
-
-async function insertSupabaseSubmission(record) {
-  const response = await fetch(`${SUPABASE_URL}/rest/v1/${encodeURIComponent(SUPABASE_TABLE)}`, {
-    method: "POST",
-    headers: {
-      ...supabaseHeaders(),
-      "Content-Type": "application/json",
-      Prefer: "return=minimal"
-    },
-    body: JSON.stringify(record)
-  });
-
-  if (!response.ok) {
-    throw new Error(`Supabase insert failed: ${response.status} ${await response.text()}`);
-  }
-}
-
-function supabaseHeaders() {
-  return {
-    apikey: SUPABASE_SERVICE_ROLE_KEY,
-    Authorization: `Bearer ${SUPABASE_SERVICE_ROLE_KEY}`
-  };
 }
 
 function sendJson(res, statusCode, payload, extraHeaders = {}) {
