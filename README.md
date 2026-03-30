@@ -3,7 +3,7 @@
 Minimal pink prank website with:
 
 - Multi-language prank landing page (`Eng`, `Vie`, `Cn`)
-- Submission storage in `data/submissions.json`
+- Submission storage via Supabase or local JSON fallback
 - Protected admin page at `/admin`
 - CSV export for all submissions
 
@@ -24,27 +24,31 @@ Required values:
 - `SESSION_SECRET`: long random secret for signed admin sessions
 - `HOST`: use `0.0.0.0` in hosted environments
 - `PORT`: hosting platform port
-- `DATA_DIR`: where prank submissions are stored
+- `SUPABASE_URL`: your Supabase project URL
+- `SUPABASE_SERVICE_ROLE_KEY`: server-only key for inserts and admin reads
+- `SUPABASE_TABLE`: defaults to `submissions`
 
 ## Deploy
 
 ### Render
 
-This project is a better fit for Render than Vercel because submissions are currently saved to a local JSON file.
+This project works well on Render free tier when Supabase is used for persistent storage.
 
 Recommended setup:
 
 1. Push this repo to GitHub.
 2. In Render, create a new Blueprint or Web Service from this repo.
 3. If you use the included [`render.yaml`](/Users/mee/Downloads/crushmatchai/render.yaml), Render will prefill the service config for the free tier.
-4. Set `ADMIN_PASSWORD` and `SESSION_SECRET` in the Render dashboard.
-5. Deploy.
+4. Create a Supabase project.
+5. Run the SQL in [`supabase-schema.sql`](/Users/mee/Downloads/crushmatchai/supabase-schema.sql).
+6. Set `ADMIN_PASSWORD`, `SESSION_SECRET`, `SUPABASE_URL`, and `SUPABASE_SERVICE_ROLE_KEY` in the Render dashboard.
+7. Deploy.
 
-Important:
+Notes:
 
-- Render free tier does not support persistent disks
-- prank submissions saved to `data/submissions.json` can disappear after redeploys, restarts, or instance replacement
-- if you want durable prank data, upgrade to a Render plan with disks or move storage to a database
+- With Supabase configured, prank submissions persist across deploys and restarts.
+- Without Supabase env vars, the app falls back to local `data/submissions.json`.
+- Keep `SUPABASE_SERVICE_ROLE_KEY` on the server only. Never expose it in browser code.
 
 ### Vercel
 
