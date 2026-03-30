@@ -3,9 +3,9 @@
   "short_name": "CrushMatch",
   "icons": [
     {
-      "src": "/favicon.svg",
-      "sizes": "any",
-      "type": "image/svg+xml",
+      "src": "/logo-hearts.png",
+      "sizes": "768x768",
+      "type": "image/png",
       "purpose": "any"
     }
   ],
