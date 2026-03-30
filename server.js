@@ -6,7 +6,7 @@ const { URL } = require("url");
 
 const rootDir = __dirname;
 const publicDir = path.join(rootDir, "public");
-const dataDir = path.join(rootDir, "data");
+const dataDir = path.resolve(process.env.DATA_DIR || path.join(rootDir, "data"));
 const dataFile = path.join(dataDir, "submissions.json");
 const envFile = path.join(rootDir, ".env");
 
