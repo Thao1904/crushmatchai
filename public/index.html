@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CrushMatch Prank Lab</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&family=Noto+Sans+SC:wght@300;400;500;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body data-page="home">
+    <div class="page-shell">
+      <header class="site-header">
+        <a class="brand" href="/">CrushMatch</a>
+        <div class="lang-switcher" aria-label="Language switcher">
+          <button class="lang-btn is-active" data-lang="eng">Eng</button>
+          <button class="lang-btn" data-lang="vie">Vie</button>
+          <button class="lang-btn" data-lang="cn">中文</button>
+        </div>
+      </header>
+
+      <main class="hero-layout">
+        <section class="hero-copy card glass">
+          <p class="eyebrow" data-i18n="eyebrow"></p>
+          <h1 class="hero-title" data-i18n="title"></h1>
+          <p class="hero-text" data-i18n="subtitle"></p>
+          <div class="mini-note">
+            <span class="note-pill" data-i18n="notePill"></span>
+            <p data-i18n="noteText"></p>
+          </div>
+        </section>
+
+        <section class="form-panel card">
+          <form id="compatibility-form" class="compatibility-form">
+            <label class="field">
+              <span data-i18n="yourNameLabel"></span>
+              <input id="yourName" name="yourName" maxlength="80" required />
+            </label>
+
+            <label class="field">
+              <span data-i18n="crushNameLabel"></span>
+              <input id="crushName" name="crushName" maxlength="80" required />
+            </label>
+
+            <div class="optional-box">
+              <div>
+                <p class="optional-title" data-i18n="dobTitle"></p>
+                <p class="optional-text" data-i18n="dobHint"></p>
+              </div>
+
+              <div class="date-grid">
+                <label class="field field-small">
+                  <span data-i18n="yourDobLabel"></span>
+                  <input id="yourBirthDate" name="yourBirthDate" type="date" />
+                </label>
+
+                <label class="field field-small">
+                  <span data-i18n="crushDobLabel"></span>
+                  <input id="crushBirthDate" name="crushBirthDate" type="date" />
+                </label>
+              </div>
+            </div>
+
+            <button id="submitBtn" class="primary-btn" type="submit" data-i18n="submit"></button>
+          </form>
+        </section>
+
+        <section class="insights card">
+          <div class="insights-head">
+            <p class="eyebrow" data-i18n="insightEyebrow"></p>
+            <h2 data-i18n="insightTitle"></h2>
+          </div>
+
+          <div class="chart-list">
+            <article class="chart-card locked">
+              <div class="chart-header">
+                <h3 data-i18n="chartOneTitle"></h3>
+                <span class="lock-pill">LOCKED</span>
+              </div>
+              <div class="fake-meter">
+                <div class="fake-meter-fill fill-a"></div>
+              </div>
+              <p data-i18n="chartOneText"></p>
+            </article>
+
+            <article class="chart-card locked">
+              <div class="chart-header">
+                <h3 data-i18n="chartTwoTitle"></h3>
+                <span class="lock-pill">LOCKED</span>
+              </div>
+              <div class="fake-meter">
+                <div class="fake-meter-fill fill-b"></div>
+              </div>
+              <p data-i18n="chartTwoText"></p>
+            </article>
+
+            <article class="chart-card locked">
+              <div class="chart-header">
+                <h3 data-i18n="chartThreeTitle"></h3>
+                <span class="lock-pill">LOCKED</span>
+              </div>
+              <div class="fake-meter">
+                <div class="fake-meter-fill fill-c"></div>
+              </div>
+              <p data-i18n="chartThreeText"></p>
+            </article>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <div id="resultModal" class="modal hidden" aria-hidden="true">
+      <div class="modal-backdrop" data-close-modal="true"></div>
+      <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+        <button id="closeModalBtn" class="modal-close" type="button" aria-label="Close">
+          ×
+        </button>
+        <p class="result-badge" data-i18n="resultBadge"></p>
+        <h2 id="modalTitle" data-i18n="prankTitle"></h2>
+        <p id="resultMessage"></p>
+        <a
+          id="contactBtn"
+          class="primary-btn modal-contact"
+          href="https://instagram.com/mee.ltt"
+          target="_blank"
+          rel="noreferrer"
+          data-i18n="contactButton"
+        ></a>
+      </div>
+    </div>
+
+    <script src="/app.js"></script>
+  </body>
+</html>

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CrushMatch Admin</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&family=Noto+Sans+SC:wght@300;400;500;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body data-page="admin">
+    <div class="page-shell admin-shell">
+      <header class="site-header">
+        <a class="brand" href="/">CrushMatch Admin</a>
+        <div class="admin-actions">
+          <button id="logoutBtn" class="ghost-btn hidden" type="button">Logout</button>
+        </div>
+      </header>
+
+      <main class="admin-layout">
+        <section id="loginCard" class="card admin-login">
+          <p class="eyebrow">Protected Area</p>
+          <h1>Admin prank dashboard</h1>
+          <p>Use your password to see who got April Fooled.</p>
+
+          <form id="loginForm" class="compatibility-form">
+            <label class="field">
+              <span>Password</span>
+              <input id="password" name="password" type="password" required />
+            </label>
+            <button class="primary-btn" type="submit">Unlock admin</button>
+          </form>
+
+          <p id="loginError" class="error-text hidden">Wrong password. Try again.</p>
+        </section>
+
+        <section id="dashboardCard" class="card admin-dashboard hidden">
+          <div class="dashboard-head">
+            <div>
+              <p class="eyebrow">Submission Vault</p>
+              <h2>All prank victims</h2>
+            </div>
+            <a class="primary-btn export-link" href="/api/admin/export.csv">Export CSV</a>
+          </div>
+
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Your name</th>
+                  <th>Crush name</th>
+                  <th>Your DOB</th>
+                  <th>Crush DOB</th>
+                  <th>Lang</th>
+                  <th>Created</th>
+                </tr>
+              </thead>
+              <tbody id="submissionsBody"></tbody>
+            </table>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script src="/admin.js"></script>
+  </body>
+</html>

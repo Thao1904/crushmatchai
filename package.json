@@ -1,0 +1,10 @@
+{
+  "name": "crushmatchai-prank-site",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Minimal pink prank compatibility site with protected admin dashboard.",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  }
+}
