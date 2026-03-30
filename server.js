@@ -16,6 +16,7 @@ const PORT = Number(process.env.PORT || 3000);
 const HOST = process.env.HOST || "127.0.0.1";
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || "change-me-now";
 const SESSION_SECRET = process.env.SESSION_SECRET || crypto.randomBytes(32).toString("hex");
+const GOOGLE_SHEETS_WEBHOOK_URL = process.env.GOOGLE_SHEETS_WEBHOOK_URL || "";
 const SESSION_TTL_MS = 1000 * 60 * 60 * 8;
 const sessions = new Map();
 
@@ -185,6 +186,9 @@ async function handleSubmit(req, res) {
 
   submissions.unshift(record);
   saveSubmissions(submissions);
+  await notifyGoogleSheets(record).catch((error) => {
+    console.error("Google Sheets sync failed:", error);
+  });
 
   sendJson(res, 201, {
     ok: true,
@@ -325,6 +329,24 @@ function seededNumber(seed, min, max) {
   const decimal = Number.parseInt(hex, 16);
   const range = max - min + 1;
   return min + (decimal % range);
+}
+
+async function notifyGoogleSheets(record) {
+  if (!GOOGLE_SHEETS_WEBHOOK_URL) {
+    return;
+  }
+
+  const response = await fetch(GOOGLE_SHEETS_WEBHOOK_URL, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(record)
+  });
+
+  if (!response.ok) {
+    throw new Error(`Webhook returned ${response.status}`);
+  }
 }
 
 function sendJson(res, statusCode, payload, extraHeaders = {}) {
