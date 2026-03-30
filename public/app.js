@@ -1,9 +1,9 @@
 const translations = {
   eng: {
     eyebrow: "Pink Lab",
-    title: "Test how dangerously iconic your vibe is with your crush, your ex, or literally anyone.",
+    title: "Are You Two A Perfect Match?",
     subtitle:
-      "A pretty compatibility test with locked charts, cosmic signals, and mysterious analysis.",
+      "A quick compatibility read powered by AI, astrology, zodiac energy, and cosmic signals.",
     notePill: "Optional accuracy buff",
     noteText: "Add birthdays if you want the universe to act extra confident about its nonsense.",
     yourNameLabel: "Your name",
@@ -27,9 +27,9 @@ const translations = {
   },
   vie: {
     eyebrow: "Lab tình iu",
-    title: "Test độ hợp nhau siêu cuốn giữa bạn với crush, người cũ, hay ai đó bạn đang tò mò.",
+    title: "Bạn & Người Ấy Có Hợp Nhau?",
     subtitle:
-      "Một bài test xinh xẻo với chart bị khoá, tín hiệu vũ trụ và phân tích đầy bí ẩn.",
+      "Khám phá mức độ tương hợp với AI power, chiêm tinh học và tín hiệu vũ trụ.",
     notePill: "Buff chính xác",
     noteText: "Điền ngày sinh nếu thích để vũ trụ nói chuyện rất tự tin dù chẳng ai kiểm chứng.",
     yourNameLabel: "Tên bạn",
@@ -53,9 +53,9 @@ const translations = {
   },
   cn: {
     eyebrow: "粉红实验室",
-    title: "来测测你和crush, 前任, 或那个让你疯狂脑补的人到底有多来电。",
+    title: "你和TA真的合拍吗？",
     subtitle:
-      "锁住的图表, 宇宙信号, 还有一点点暧昧分析, 氛围直接拉满。",
+      "用 AI、星座能量和宇宙信号，快速看看你们有多来电。",
     notePill: "玄学加成",
     noteText: "想让结果看起来更像那么回事, 可以顺手填生日, 宇宙会装得更认真一点。",
     yourNameLabel: "你的名字",
