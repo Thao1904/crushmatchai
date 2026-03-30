@@ -16,7 +16,3 @@ services:
         sync: false
       - key: SESSION_SECRET
         sync: false
-    disk:
-      name: crushmatch-data
-      mountPath: /opt/render/project/src/data
-      sizeGB: 1

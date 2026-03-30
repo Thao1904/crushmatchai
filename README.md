@@ -36,11 +36,15 @@ Recommended setup:
 
 1. Push this repo to GitHub.
 2. In Render, create a new Blueprint or Web Service from this repo.
-3. If you use the included [`render.yaml`](/Users/mee/Downloads/crushmatchai/render.yaml), Render will prefill the service config and persistent disk.
+3. If you use the included [`render.yaml`](/Users/mee/Downloads/crushmatchai/render.yaml), Render will prefill the service config for the free tier.
 4. Set `ADMIN_PASSWORD` and `SESSION_SECRET` in the Render dashboard.
 5. Deploy.
 
-Without a persistent disk, Render's filesystem is ephemeral and your saved prank submissions will disappear after redeploys or restarts.
+Important:
+
+- Render free tier does not support persistent disks
+- prank submissions saved to `data/submissions.json` can disappear after redeploys, restarts, or instance replacement
+- if you want durable prank data, upgrade to a Render plan with disks or move storage to a database
 
 ### Vercel
 
