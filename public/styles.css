@@ -96,10 +96,15 @@ input:focus {
 }
 
 .brand {
-  font-size: 1.1rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+  display: inline-flex;
+  align-items: center;
+}
+
+.brand img {
+  display: block;
+  width: 78px;
+  height: 78px;
+  object-fit: contain;
 }
 
 .lang-switcher,
@@ -510,6 +515,11 @@ th {
   .dashboard-head {
     flex-direction: column;
     align-items: stretch;
+  }
+
+  .brand img {
+    width: 64px;
+    height: 64px;
   }
 
   .site-header {
