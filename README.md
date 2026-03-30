@@ -34,12 +34,11 @@ This project is a better fit for Render than Vercel because submissions are curr
 
 Recommended setup:
 
-1. Create a new Web Service from this GitHub repo.
-2. Runtime: `Node`
-3. Build command: leave empty
-4. Start command: `npm start`
-5. Add environment variables from `.env.production.example`
-6. Attach a persistent disk and mount it at `/opt/render/project/src/data`
+1. Push this repo to GitHub.
+2. In Render, create a new Blueprint or Web Service from this repo.
+3. If you use the included [`render.yaml`](/Users/mee/Downloads/crushmatchai/render.yaml), Render will prefill the service config and persistent disk.
+4. Set `ADMIN_PASSWORD` and `SESSION_SECRET` in the Render dashboard.
+5. Deploy.
 
 Without a persistent disk, Render's filesystem is ephemeral and your saved prank submissions will disappear after redeploys or restarts.
 

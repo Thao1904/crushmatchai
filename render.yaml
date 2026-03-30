@@ -1,0 +1,22 @@
+services:
+  - type: web
+    name: crushmatchai
+    runtime: node
+    plan: free
+    buildCommand: ""
+    startCommand: npm start
+    envVars:
+      - key: HOST
+        value: 0.0.0.0
+      - key: PORT
+        value: 10000
+      - key: DATA_DIR
+        value: /opt/render/project/src/data
+      - key: ADMIN_PASSWORD
+        sync: false
+      - key: SESSION_SECRET
+        sync: false
+    disk:
+      name: crushmatch-data
+      mountPath: /opt/render/project/src/data
+      sizeGB: 1
