@@ -1,0 +1,15 @@
+{
+  "name": "CrushMatch",
+  "short_name": "CrushMatch",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ],
+  "theme_color": "#ff6fa5",
+  "background_color": "#fff5f9",
+  "display": "standalone"
+}
