@@ -38,7 +38,7 @@ const translations = {
     dobHint: "Không bắt buộc. Nhỏ thôi nhưng tăng độ kiểm chứng!",
     yourDobLabel: "Ngày sinh bạn",
     crushDobLabel: "Ngày sinh người ấy",
-    submit: "Xem chart hợp nhau",
+    submit: "Xem phân tích độ hợp nhau",
     resultBadge: "Kết quả chính thức",
     prankTitle: "Ố là la",
     contactButton: "Năn nỉ @mee.ltt",
@@ -57,7 +57,7 @@ const translations = {
     subtitle:
       "用 AI、星座能量和宇宙信号，快速看看你们有多来电。",
     notePill: "玄学加成",
-    noteText: "想让结果看起来更像那么回事, 可以顺手填生日, 宇宙会装得更认真一点。",
+    noteText: "想让结果看起来更像那么回事，也可以顺手填一下生日，感觉宇宙都会配合得更认真。",
     yourNameLabel: "你的名字",
     crushNameLabel: "TA的名字",
     dobTitle: "生日小加成",
@@ -92,7 +92,7 @@ const prankMessages = {
   vie: (yourName, crushName) => `
     <span><strong>${escapeHtml(yourName)}</strong> và <strong>${escapeHtml(crushName)}</strong> quả là hai cái tên đáng iu, độ hợp nhau thì mình hong biết nhưng số lượng cừu con bị lừa đã +1 haha.</span>
     <br /><br />
-    <span>Kết quả này sẽ được gửi đến cho admin.</span>
+    <span>Kết quả này sẽ được gửi đến cho đội ngũ admin.</span>
     <br /><br />
     <strong>Cá tháng tư dui dẻ ♡</strong>
     <br /><br />
