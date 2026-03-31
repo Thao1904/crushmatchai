@@ -18,3 +18,5 @@ services:
         sync: false
       - key: GOOGLE_SHEETS_WEBHOOK_URL
         sync: false
+      - key: GOOGLE_SHEETS_SHARED_SECRET
+        sync: false

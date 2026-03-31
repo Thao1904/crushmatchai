@@ -17,8 +17,10 @@ const HOST = process.env.HOST || "127.0.0.1";
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || "change-me-now";
 const SESSION_SECRET = process.env.SESSION_SECRET || crypto.randomBytes(32).toString("hex");
 const GOOGLE_SHEETS_WEBHOOK_URL = process.env.GOOGLE_SHEETS_WEBHOOK_URL || "";
+const GOOGLE_SHEETS_SHARED_SECRET = process.env.GOOGLE_SHEETS_SHARED_SECRET || "";
 const SESSION_TTL_MS = 1000 * 60 * 60 * 8;
 const sessions = new Map();
+const useGoogleSheets = Boolean(GOOGLE_SHEETS_WEBHOOK_URL);
 
 ensureStorage();
 
@@ -59,9 +61,11 @@ const server = http.createServer(async (req, res) => {
     }
 
     if (req.method === "GET" && url.pathname === "/api/health") {
+      const totalSubmissions = (await getSubmissions()).length;
       return sendJson(res, 200, {
         ok: true,
-        totalSubmissions: readSubmissions().length
+        storage: useGoogleSheets ? "google-sheets" : "local-json",
+        totalSubmissions
       });
     }
 
@@ -130,6 +134,25 @@ function saveSubmissions(submissions) {
   fs.writeFileSync(dataFile, JSON.stringify(submissions, null, 2) + "\n", "utf8");
 }
 
+async function getSubmissions() {
+  if (useGoogleSheets) {
+    return readGoogleSheetsSubmissions();
+  }
+
+  return readSubmissions();
+}
+
+async function saveSubmission(record) {
+  if (useGoogleSheets) {
+    await notifyGoogleSheets(record);
+    return;
+  }
+
+  const submissions = readSubmissions();
+  submissions.unshift(record);
+  saveSubmissions(submissions);
+}
+
 function parseBody(req) {
   return new Promise((resolve, reject) => {
     let body = "";
@@ -171,7 +194,6 @@ async function handleSubmit(req, res) {
     chaos: seededNumber(`c:${scoreSeed}`, 33, 100)
   };
 
-  const submissions = readSubmissions();
   const record = {
     id: crypto.randomUUID(),
     yourName,
@@ -184,11 +206,7 @@ async function handleSubmit(req, res) {
     createdAt: new Date().toISOString()
   };
 
-  submissions.unshift(record);
-  saveSubmissions(submissions);
-  await notifyGoogleSheets(record).catch((error) => {
-    console.error("Google Sheets sync failed:", error);
-  });
+  await saveSubmission(record);
 
   sendJson(res, 201, {
     ok: true,
@@ -247,20 +265,21 @@ function handleAdminLogout(req, res) {
   );
 }
 
-function handleAdminSubmissions(req, res) {
+async function handleAdminSubmissions(req, res) {
   if (!isAuthed(req)) {
     return sendJson(res, 401, { error: "Unauthorized" });
   }
 
-  sendJson(res, 200, { submissions: readSubmissions() });
+  const submissions = await getSubmissions();
+  sendJson(res, 200, { submissions });
 }
 
-function handleAdminExport(req, res) {
+async function handleAdminExport(req, res) {
   if (!isAuthed(req)) {
     return sendJson(res, 401, { error: "Unauthorized" });
   }
 
-  const rows = readSubmissions();
+  const rows = await getSubmissions();
   const csv = toCsv(rows);
   res.writeHead(200, {
     "Content-Type": "text/csv; charset=utf-8",
@@ -341,12 +360,37 @@ async function notifyGoogleSheets(record) {
     headers: {
       "Content-Type": "application/json"
     },
-    body: JSON.stringify(record)
+    body: JSON.stringify({
+      secret: GOOGLE_SHEETS_SHARED_SECRET,
+      action: "append",
+      record
+    })
   });
 
   if (!response.ok) {
     throw new Error(`Webhook returned ${response.status}`);
   }
+}
+
+async function readGoogleSheetsSubmissions() {
+  const url = new URL(GOOGLE_SHEETS_WEBHOOK_URL);
+  url.searchParams.set("action", "list");
+  if (GOOGLE_SHEETS_SHARED_SECRET) {
+    url.searchParams.set("secret", GOOGLE_SHEETS_SHARED_SECRET);
+  }
+
+  const response = await fetch(url, {
+    headers: {
+      Accept: "application/json"
+    }
+  });
+
+  if (!response.ok) {
+    throw new Error(`Google Sheets read failed: ${response.status}`);
+  }
+
+  const payload = await response.json();
+  return Array.isArray(payload.rows) ? payload.rows : [];
 }
 
 function sendJson(res, statusCode, payload, extraHeaders = {}) {

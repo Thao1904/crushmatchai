@@ -26,7 +26,8 @@ Required values:
 - `HOST`: use `0.0.0.0` in hosted environments
 - `PORT`: hosting platform port
 - `DATA_DIR`: where prank submissions are stored
-- `GOOGLE_SHEETS_WEBHOOK_URL`: optional Apps Script webhook URL for backup logging
+- `GOOGLE_SHEETS_WEBHOOK_URL`: Apps Script web app URL for durable storage
+- `GOOGLE_SHEETS_SHARED_SECRET`: shared secret between Render and Apps Script
 
 ## Deploy
 
@@ -47,20 +48,27 @@ Important:
 - Render free tier does not support persistent disks
 - prank submissions saved to `data/submissions.json` can disappear after redeploys, restarts, or instance replacement
 - if you want durable prank data, upgrade to a Render plan with disks or move storage to a database
-- if you set `GOOGLE_SHEETS_WEBHOOK_URL`, each submission is also posted to Google Sheets as a lightweight backup
+- if you set `GOOGLE_SHEETS_WEBHOOK_URL`, Google Sheets becomes the durable source of truth for submissions and admin exports
 
 ## Google Sheets backup
 
-If you want every submission copied into Google Sheets:
+If you want Render sleep/restarts to stop affecting stored submissions:
 
 1. Create a Google Sheet and add a tab named `Submissions`
 2. Open `Extensions` -> `Apps Script`
 3. Paste the code from [`google-apps-script.gs`](/Users/mee/Downloads/crushmatchai/google-apps-script.gs)
-4. Deploy it as a Web App
-5. Set access so your server can call it
-6. Copy the Web App URL into `GOOGLE_SHEETS_WEBHOOK_URL`
+4. In Apps Script, open `Project Settings` and add a script property named `SHARED_SECRET`
+5. Put any long random value in it
+6. Deploy it as a Web App
+7. Set access so your server can call it
+8. Copy the Web App URL into `GOOGLE_SHEETS_WEBHOOK_URL`
+9. Put the same random value into Render env `GOOGLE_SHEETS_SHARED_SECRET`
 
-The backend sends each saved submission to that webhook after writing local JSON. If Google Sheets fails, the prank flow still succeeds and the server only logs the error.
+With this setup:
+
+- new submissions are written to Google Sheets
+- admin list and CSV export read from Google Sheets
+- local JSON becomes only a fallback when Sheets is not configured
 
 ### Vercel
 
