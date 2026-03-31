@@ -72,8 +72,8 @@ function renderRows(rows) {
     row.innerHTML = `
       <td>${escapeHtml(entry.yourName)}</td>
       <td>${escapeHtml(entry.crushName)}</td>
-      <td>${escapeHtml(entry.yourBirthDate || "-")}</td>
-      <td>${escapeHtml(entry.crushBirthDate || "-")}</td>
+      <td>${escapeHtml(formatDob(entry.yourBirthDate))}</td>
+      <td>${escapeHtml(formatDob(entry.crushBirthDate))}</td>
       <td>${escapeHtml((entry.locale || "").toUpperCase())}</td>
       <td>${escapeHtml(formatDate(entry.createdAt))}</td>
     `;
@@ -88,6 +88,20 @@ function formatDate(value) {
   }
 
   return date.toLocaleString();
+}
+
+function formatDob(value) {
+  const text = String(value || "").trim();
+  if (!text) {
+    return "-";
+  }
+
+  const match = text.match(/^\d{4}-\d{2}-\d{2}/);
+  if (match) {
+    return match[0];
+  }
+
+  return text;
 }
 
 function escapeHtml(value) {
